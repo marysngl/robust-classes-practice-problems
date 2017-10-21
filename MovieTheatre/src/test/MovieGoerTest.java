@@ -1,5 +1,7 @@
 package test;
 
+import exceptions.ShowingFullException;
+import exceptions.UnderAgeException;
 import model.Movie;
 import model.MovieGoer;
 import model.Ticket;
@@ -40,24 +42,49 @@ public class MovieGoerTest {
 
     @Test
     public void testBuyTicketNoUnderAgeException() {
-       // TODO: implement this test method where you do NOT expect the buyTicket() method to throw UnderAgeException
+        try {
+            mg1.buyTicket(m1);
+        } catch (ShowingFullException e) {
+            fail("Caught ShowingFullException: There should be places");
+        } catch (UnderAgeException e) {
+            fail("Caught UnderAgeException: The age is appropriate");
+        }
     }
 
     @Test
     public void testBuyTicketUnderAgeException() {
-        // TODO: implement this test method where you DO expect the buyTicket() method to throw UnderAgeException
+        try {
+            mg2.buyTicket(m1);
+        } catch (ShowingFullException e) {
+            fail("Caught ShowingFullException: There should be places");
+        } catch (UnderAgeException e) {
+            System.out.println("Caught UnderAgeException: Correct behaviour");
+        }
     }
 
 
     @Test
     public void testBuyTicketNoShowingFullException() {
-        // TODO: implement this test method where you do NOT expect the buyTicket() method to throw ShowingFullException
+        m2.setCurrentSeating(60);
+        try {
+            mg2.buyTicket(m2);
+        } catch (ShowingFullException e) {
+            fail("Common, nobody wants to go Ratatouille");
+        } catch (UnderAgeException e) {
+            fail("Wut? This movie is for toddlers");
+        }
     }
 
     @Test
     public void testBuyTicketShowingFullException() {
-        // TODO: implement this test method where you DO expect the buyTicket() method to throw ShowingFullException
-
+        m1.setCurrentSeating(50);
+        try {
+            mg1.buyTicket(m1);
+        } catch (ShowingFullException e) {
+            System.out.println("The Arrival got so popular, we can't even let Tom Hanks in");
+        } catch (UnderAgeException e) {
+            fail("This should not have happened");
+        }
     }
 
 
