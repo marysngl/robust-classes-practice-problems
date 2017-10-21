@@ -1,5 +1,9 @@
 package test;
 
+import exceptions.CourseFullException;
+import exceptions.GPATooLowException;
+import exceptions.MissingPrereqException;
+import exceptions.NoCoursesTakenException;
 import model.Course;
 import model.Registrar;
 import model.Transcript;
@@ -52,7 +56,13 @@ public class RegistrarTest {
 
         testReg.addStudent(testTct1);
         testReg.addStudent(testTct2);
-        testReg.promoteAllStudents();
+        try {
+            testReg.promoteAllStudents();
+        } catch (GPATooLowException e) {
+            fail("I know nothing");
+        } catch (NoCoursesTakenException e) {
+            fail("What are those courses anyway?");
+        }
 
         assertEquals(testTct1.getAcademicYear(),2);
         assertEquals(testTct2.getAcademicYear(),4);
@@ -62,7 +72,13 @@ public class RegistrarTest {
     public void testregisterStudent() {
         assertFalse(CPSC110.isCourseFull());
         assertEquals(CPSC110.getEnrollment(),22);
-        testReg.registerStudent(CPSC110, testTct1);
+        try {
+            testReg.registerStudent(CPSC110, testTct1);
+        } catch (CourseFullException e) {
+            fail("Da course is full");
+        } catch (MissingPrereqException e) {
+            fail("Not enough prerequisites");
+        }
         assertEquals(CPSC110.getEnrollment(),23);
         assertTrue(testTct1.getCurrentCourses().contains(CPSC110));
     }
