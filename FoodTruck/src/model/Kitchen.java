@@ -1,5 +1,9 @@
 package model;
 
+import model.exceptions.NoCookException;
+import model.exceptions.NoIngredientsException;
+import model.exceptions.NotEnoughMoneyException;
+
 public class Kitchen {
 
     private final static int INGREDIENT_PER_TACO = 3;
@@ -26,20 +30,26 @@ public class Kitchen {
         cookReady = b;
     }
 
-    // REQUIRES: the cook needs to be present in truck (i.e. the cookReady field must be true)
-    //           the amount of ingredients after we make the required amount of tacos must be >= 0
     // MODIFIES: this
     // EFFECTS:  number is added to tacoCount, and ingredient is decremented accordingly
-    public void makeTaco(int number) {
+    public void makeTaco(int number) throws NoCookException, NoIngredientsException {
+        if (!cookReady) {
+            throw new NoCookException("The cook is not present!");
+        }
+        if (ingredient < INGREDIENT_PER_TACO * number) {
+            throw new NoIngredientsException("Not enough ingredients to make all the tacos!");
+        }
         ingredient -= (INGREDIENT_PER_TACO * number);
         tacoCount += number;
     }
 
-    // REQUIRES: the balance field has to be greater than, or equal to 0 once we purchase (amount) of ingredients
     // MODIFIES: this
     // EFFECTS: (amount) is added to the ingredient field, and the balance field
     //          is decremented accordingly
-    public void buyIngredients(int amount) {
+    public void buyIngredients(int amount) throws NotEnoughMoneyException {
+        if (balance < DOLLAR_PER_INGREDIENT * amount) {
+            throw new NotEnoughMoneyException("We're broke!");
+        }
         balance -= (DOLLAR_PER_INGREDIENT * amount);
         ingredient += amount;
     }
